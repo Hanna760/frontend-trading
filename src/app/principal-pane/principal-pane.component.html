@@ -1,0 +1,296 @@
+<app-header></app-header>
+<div class="parent">
+  <!-- Columna Izquierda: Símbolos + Órdenes -->
+  <div class="left-column" [ngClass]="{'collapsed': sidebarCollapsed}">
+    <!-- Botón para colapsar toda la barra lateral -->
+    <div class="sidebar-toggle" (click)="toggleSidebar()">
+      <i class="fa" [ngClass]="sidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+    </div>
+
+    <!-- Symbol Search & Table Section -->
+    <div class="collapsible-section">
+      <div class="section-header" (click)="toggleSymbols()">
+        <h3>🔍 Símbolos</h3>
+        <i class="fa toggle-icon" [ngClass]="symbolsCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+      </div>
+      
+      <div class="section-content" [ngClass]="{'collapsed': symbolsCollapsed}">
+        <div class="stock-table-container">
+          <div class="search-container">
+            <input
+              type="text"
+              class="search-input"
+              [(ngModel)]="searchQuery"
+              (input)="filterSymbols()"
+              placeholder="Buscar símbolos..."
+            />
+            <i class="search-icon fa fa-search"></i>
+          </div>
+          <div style="margin-top:1rem;">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Símbolo</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let symbol of filteredSymbols; let i = index">
+                  <td>{{ symbol }}</td>
+                  <td>
+                    <button class="buy-btn" (click)="showSymbol(symbol)">Ver</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders Table & Modal Section -->
+    <div class="collapsible-section">
+      <div class="section-header" (click)="toggleOrders()">
+        <h3>📊 Historial de Órdenes</h3>
+        <i class="fa toggle-icon" [ngClass]="ordersCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+      </div>
+      
+      <div class="section-content" [ngClass]="{'collapsed': ordersCollapsed}">
+        <div class="stock-table-container">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let action of actions" (click)="toggleDetails(action)">
+                <td>
+                  <span [ngClass]="{
+                    'buy-order': action.tipo_orden.toLowerCase().includes('buy'),
+                    'sell-order': action.tipo_orden.toLowerCase().includes('sell')
+                  }">{{ action.tipo_orden }}</span>
+                </td>
+                <td>${{ action.precio }}</td>
+                <td>{{ action.fecha_hora }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-backdrop" *ngIf="selectedAction" (click)="selectedAction = null">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-button" (click)="selectedAction = null">&times;</button>
+        <h2>Detalles de la Orden</h2>
+        <div class="order-detail">
+          <span>ID:</span> <strong>{{ selectedAction.id }}</strong>
+        </div>
+        <div class="order-detail">
+          <span>Tipo:</span>
+          <strong [ngClass]="{
+            'buy-order': selectedAction.tipo_orden.toLowerCase().includes('buy'),
+            'sell-order': selectedAction.tipo_orden.toLowerCase().includes('sell')
+          }">{{ selectedAction.tipo_orden }}</strong>
+        </div>
+        <div class="order-detail">
+          <span>Precio:</span>
+          <strong>${{ selectedAction.precio }}</strong>
+        </div>
+        <div class="order-detail">
+          <span>Fecha y Hora:</span>
+          <strong>{{ selectedAction.fecha_hora }}</strong>
+        </div>
+        @if(rol == 3){
+          <button class="buy-btn" (click)="makeContract(selectedAction.usuario_id, selectedAction.comision)">Hacer contrato</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna Central: Panel de Trading -->
+  <div class="center-column">
+    <div class="stock-card">
+      <!-- Panel de Trading para Accionistas y Comisionistas -->
+      <div class="trading-header">
+        <h2>💰 Panel de Trading</h2>
+        <span class="status-badge">Activo</span>
+        @if(rol == 3) {
+          <span class="role-badge comisionista">Comisionista</span>
+        } @else {
+          <span class="role-badge accionista">Accionista</span>
+        }
+      </div>
+      
+      <div class="stock-info">
+        <div class="symbol-display">
+          <span class="symbol-name">{{ symbol }}</span>
+          <span class="current-price">${{ stockPrice.toFixed(2) }}</span>
+        </div>
+        <div class="price-change">
+          <span class="change-label">Precio Actual</span>
+        </div>
+      </div>
+      
+      @if(rol != 3) {
+        <div class="trading-controls">
+          <div class="quantity-section">
+            <label class="quantity-label" for="quantity-controls">Cantidad de Acciones:</label>
+            <div class="quantity-controls" id="quantity-controls">
+              <button class="qty-btn decrease" (click)="decreaseQuantity()" [disabled]="buyQuantity <= 1">−</button>
+              <span class="quantity-value">{{ buyQuantity }}</span>
+              <button class="qty-btn increase" (click)="increaseQuantity()">+</button>
+            </div>
+          </div>
+          
+          <div class="total-section">
+            <span class="total-label">Total a Pagar:</span>
+            <span class="total-amount">${{ (buyQuantity * stockPrice).toFixed(2) }}</span>
+          </div>
+        </div>
+      }
+      
+      @if(rol != 3) {
+        <div class="action-buttons">
+          <button class="buy-btn" (click)="buyStock()">
+            <span class="btn-icon">📈</span>
+            Comprar
+          </button>
+          <button class="sell-btn" (click)="sellStock()">
+            <span class="btn-icon">📉</span>
+            Vender
+          </button>
+        </div>
+      }
+
+      @if(rol == 3) {
+        <!-- Órdenes Pendientes para Comisionistas -->
+        <div class="orders-section">
+          <div class="section-header">
+            <h2>⏳ Órdenes Pendientes de Aprobación</h2>
+            <span class="orders-count">{{ pendingOrders.length }} órdenes pendientes</span>
+          </div>
+          
+          
+          <div class="orders-container">
+            @if(pendingOrders.length > 0) {
+              <div class="orders-list">
+                <div *ngFor="let order of pendingOrders" class="order-card pending-order">
+                  <div class="order-header">
+                    <div class="order-info">
+                      <span class="order-type" [ngClass]="{
+                        'buy-order': order.tipo_orden.toLowerCase().includes('buy'),
+                        'sell-order': order.tipo_orden.toLowerCase().includes('sell')
+                      }">{{ order.tipo_orden }}</span>
+                      <span class="order-price">${{ order.precio }}</span>
+                    </div>
+                    <div class="order-date">{{ order.fecha_hora }}</div>
+                  </div>
+                  
+                  <div class="order-details">
+                    <div class="detail-row">
+                      <span class="label">Usuario ID:</span>
+                      <span class="value">{{ order.usuario_id }}</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="label">Comisión:</span>
+                      <span class="value">${{ order.comision }}</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="label">Estado:</span>
+                      <span class="value status-pending">Pendiente</span>
+                    </div>
+                  </div>
+                  
+                  <div class="order-actions">
+                    <button class="approve-btn" (click)="approveOrder(order.id)">
+                      <span class="btn-icon">✅</span>
+                      Aprobar
+                    </button>
+                    <button class="deny-btn" (click)="denyOrder(order.id)">
+                      <span class="btn-icon">❌</span>
+                      Denegar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="no-orders">
+                <div class="no-orders-icon">📭</div>
+                <p>No hay órdenes pendientes</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Órdenes Procesadas para Comisionistas -->
+        <div class="orders-section">
+          <div class="section-header">
+            <h2>📋 Historial de Órdenes Procesadas</h2>
+            <span class="orders-count">{{ processedOrders.length }} órdenes procesadas</span>
+          </div>
+          
+          <div class="orders-container">
+            @if(processedOrders.length > 0) {
+              <div class="orders-list">
+                <div *ngFor="let order of processedOrders" class="order-card processed-order">
+                  <div class="order-header">
+                    <div class="order-info">
+                      <span class="order-type" [ngClass]="{
+                        'buy-order': order.tipo_orden.toLowerCase().includes('buy'),
+                        'sell-order': order.tipo_orden.toLowerCase().includes('sell')
+                      }">{{ order.tipo_orden }}</span>
+                      <span class="order-price">${{ order.precio }}</span>
+                    </div>
+                    <div class="order-date">{{ order.fecha_hora }}</div>
+                  </div>
+                  
+                  <div class="order-details">
+                    <div class="detail-row">
+                      <span class="label">Usuario ID:</span>
+                      <span class="value">{{ order.usuario_id }}</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="label">Comisión:</span>
+                      <span class="value">${{ order.comision }}</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="label">Estado:</span>
+                      <span class="value" [ngClass]="{
+                        'status-approved': order.estado === 'approved',
+                        'status-denied': order.estado === 'denied'
+                      }">{{ order.estado === 'approved' ? 'Aprobada' : order.estado === 'denied' ? 'Denegada' : order.estado }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="no-orders">
+                <div class="no-orders-icon">📭</div>
+                <p>No hay órdenes procesadas</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Columna Derecha: Gráfico -->
+  <div class="right-column">
+    <div class="chart-header">
+      <h3>📈 Gráfico en Tiempo Real</h3>
+      <span class="current-symbol">{{ symbol }}</span>
+    </div>
+    <div id="tradingview_12345" class="chart-container">
+      <div class="chart-loading" *ngIf="!widget">
+        <div class="loading-spinner"></div>
+        <p>Cargando gráfico...</p>
+      </div>
+    </div>
+  </div>
+</div>

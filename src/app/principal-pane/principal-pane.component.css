@@ -1,0 +1,1153 @@
+/* Paleta: fondo oscuro, verdes vibrantes, acentos naranja */
+
+/* Fondo general oscuro con degradado */
+.parent {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 60px); /* Restar altura del header */
+  overflow: hidden;
+  background: linear-gradient(135deg, #101820 0%, #1a1f2b 100%);
+  gap: 1rem; /* Espacio entre columnas */
+  align-items: stretch; /* Asegurar que todas las columnas tengan la misma altura */
+}
+
+/* Chart principal - TradingView (ahora a la derecha) */
+.right-column {
+  flex: 2.5; /* Más ancho para el gráfico */
+  background: linear-gradient(135deg, #181c24 60%, #23272f 100%);
+  box-shadow: 0 8px 32px 0 #00c85330;
+  border-radius: 0 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 200, 83, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 200, 83, 0.3);
+}
+
+.chart-header h3 {
+  color: #00c853;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.current-symbol {
+  color: #ff9100;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background: rgba(255, 145, 0, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 145, 0, 0.3);
+}
+
+#tradingview_12345 {
+  width: 100%;
+  height: calc(100% - 60px);
+  margin: 0 auto;
+  background: #181c24;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 #00c85340;
+  padding: 0.5rem;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 400px;
+}
+
+/* Contenedor de la columna izquierda (símbolos + órdenes) */
+.left-column {
+  flex: 0 0 320px; /* Ancho fijo para evitar superposición */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 320px;
+  position: relative;
+  transition: all 0.3s ease;
+  background: linear-gradient(120deg, #23272f 70%, #181c24 100%);
+  border-radius: 0 24px 24px 0;
+  box-shadow: 0 4px 24px 0 #00c85320;
+}
+
+.left-column.collapsed {
+  flex: 0 0 60px;
+  max-width: 60px;
+}
+
+/* Botón para colapsar toda la barra lateral */
+.sidebar-toggle {
+  position: absolute;
+  top: 20px;
+  right: -15px;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(45deg, #00c853, #009624);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.4);
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 200, 83, 0.6);
+}
+
+.sidebar-toggle i {
+  color: white;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+/* Secciones colapsables */
+.collapsible-section {
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(24, 28, 36, 0.5);
+  border: 1px solid rgba(0, 200, 83, 0.2);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(90deg, rgba(0, 200, 83, 0.1), rgba(255, 145, 0, 0.1));
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(0, 200, 83, 0.3);
+}
+
+.section-header:hover {
+  background: linear-gradient(90deg, rgba(0, 200, 83, 0.2), rgba(255, 145, 0, 0.2));
+  transform: translateY(-1px);
+}
+
+.section-header h3 {
+  margin: 0;
+  color: #00c853;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 200, 83, 0.3);
+}
+
+.toggle-icon {
+  color: #ff9100;
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.section-content {
+  max-height: 500px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  padding: 1rem;
+}
+
+.section-content.collapsed {
+  max-height: 0;
+  padding: 0 1rem;
+}
+
+/* Cuando la barra lateral está colapsada */
+.left-column.collapsed .section-header {
+  padding: 0.5rem;
+  justify-content: center;
+}
+
+.left-column.collapsed .section-header h3 {
+  display: none;
+}
+
+.left-column.collapsed .section-content {
+  display: none;
+}
+
+.left-column.collapsed .sidebar-toggle {
+  right: -15px;
+}
+
+/* Indicador de carga para el gráfico */
+.chart-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #e0e0e0;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #23272f;
+  border-top: 4px solid #00c853;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Estilos para el contenido dentro de las secciones colapsables */
+.stock-table-container {
+  width: 100%;
+  margin-top: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 200, 83, 0.2);
+}
+
+
+.search-input {
+  width: 85%;
+  padding: 12px 40px 12px 16px;
+  border: 2px solid #00c853;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #181c24;
+  color: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.3);
+}
+
+.search-input:focus {
+  border-color: #ff9100;
+  box-shadow: 0 0 12px rgba(255, 145, 0, 0.5);
+  transform: scale(1.02);
+}
+
+.search-icon {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ff9100;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.2s;
+}
+
+.search-icon:hover {
+  color: #00c853;
+}
+
+/* Tabla de símbolos */
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  background: #181c24;
+  color: #fff;
+  box-shadow: 0 4px 16px 0 rgba(0, 200, 83, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  border: 1px solid rgba(0, 200, 83, 0.3);
+}
+
+.stock-table thead {
+  background: linear-gradient(90deg, #00c853 60%, #009624 100%);
+  color: #fff;
+}
+
+.stock-table th,
+.stock-table td {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid #23272f;
+  font-size: 0.95rem;
+}
+
+.stock-table th {
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.stock-table tr:last-child td {
+  border-bottom: none;
+}
+
+.stock-table tr:hover {
+  background: rgba(0, 200, 83, 0.1);
+  color: #ff9100;
+  transition: all 0.2s ease;
+  transform: scale(1.01);
+}
+
+.stock-table tr:hover td {
+  border-color: rgba(255, 145, 0, 0.3);
+}
+
+/* Tabla de resultados */
+.search-results {
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #00c853;
+  border-radius: 8px;
+  background: #23272f;
+  color: #fff;
+}
+
+.search-results li:hover {
+  background-color: #00c85330;
+  color: #ff9100;
+}
+
+
+.orders-table th {
+  background: linear-gradient(90deg, #ff9100 60%, #ff6f00 100%);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-bottom: 3px solid #00c853;
+  padding: 16px;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.orders-table td {
+  padding: 14px 16px;
+  text-align: center;
+  border-bottom: 1px solid #23272f;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: #e0e0e0;
+}
+
+.orders-table tr:hover {
+  background-color: rgba(255, 145, 0, 0.1);
+  color: #00c853;
+  transition: all 0.3s;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(255, 145, 0, 0.3);
+}
+
+.orders-table tr:hover td {
+  border-color: rgba(0, 200, 83, 0.3);
+  color: #ffffff;
+}
+
+/* Estilo específico para precios */
+.orders-table td:nth-child(2) {
+  color: #00c853;
+  font-weight: 600;
+}
+
+/* Estilo específico para fechas */
+.orders-table td:nth-child(3) {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(16, 24, 32, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: linear-gradient(120deg, #23272f 70%, #181c24 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 0 24px #00c85380;
+  position: relative;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.close-button {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  color: #ff9100;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: #fff;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #00c853;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.order-detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  color: #e0e0e0;
+}
+
+.buy-order {
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(45deg, #00c853, #009624);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #00c853;
+  box-shadow: 0 2px 4px rgba(0, 200, 83, 0.3);
+}
+
+.sell-order {
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(45deg, #ff9100, #ff6f00);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #ff9100;
+  box-shadow: 0 2px 4px rgba(255, 145, 0, 0.3);
+}
+
+/* Card de acción/contrato (ahora en el centro) */
+.center-column {
+  flex: 1; /* Ancho medio para el panel de trading */
+  background: linear-gradient(120deg, #181c24 60%, #23272f 100%);
+  box-shadow: 0 2px 16px 0 #00c85320;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 300px;
+}
+
+.stock-card {
+  position: relative;
+  width: 100%;
+  max-width: 350px; /* Reducir ancho máximo para adaptarse al espacio más estrecho */
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(0, 200, 83, 0.2);
+  padding: 2rem;
+  background: linear-gradient(135deg, #23272f 70%, #181c24 100%);
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 200, 83, 0.2);
+}
+
+.stock-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 200, 83, 0.3), 0 4px 12px rgba(255, 145, 0, 0.2);
+}
+
+/* Nuevos estilos para el panel de trading */
+.trading-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid rgba(0, 200, 83, 0.3);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.trading-header h2 {
+  color: #00c853;
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 200, 83, 0.3);
+}
+
+.status-badge {
+  background: linear-gradient(45deg, #00c853, #009624);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.4);
+}
+
+.role-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.role-badge.comisionista {
+  background: linear-gradient(45deg, #ff9100, #ff6f00);
+  color: white;
+}
+
+.role-badge.accionista {
+  background: linear-gradient(45deg, #2196f3, #1976d2);
+  color: white;
+}
+
+.stock-info {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.symbol-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.symbol-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #00c853;
+  text-shadow: 0 2px 8px rgba(0, 200, 83, 0.3);
+}
+
+.current-price {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #ff9100;
+  text-shadow: 0 2px 8px rgba(255, 145, 0, 0.3);
+}
+
+.change-label {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.trading-controls {
+  margin-bottom: 1.5rem;
+}
+
+.quantity-section {
+  margin-bottom: 1.2rem;
+}
+
+.quantity-label {
+  display: block;
+  color: #ff9100;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.qty-btn {
+  background: #181c24;
+  color: #00c853;
+  border: 2px solid #00c853;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background: #00c853;
+  color: #181c24;
+  transform: scale(1.1);
+}
+
+.qty-btn:disabled {
+  background: #23272f;
+  color: #666;
+  border-color: #23272f;
+  cursor: not-allowed;
+}
+
+.quantity-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  min-width: 40px;
+  text-align: center;
+}
+
+.total-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(0, 200, 83, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 200, 83, 0.3);
+}
+
+.total-label {
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.total-amount {
+  color: #00c853;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.buy-btn, .sell-btn {
+  flex: 1;
+  padding: 0.9rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.buy-btn {
+  background: linear-gradient(45deg, #00c853, #009624);
+  color: white;
+  box-shadow: 0 4px 16px rgba(0, 200, 83, 0.4);
+}
+
+.buy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 200, 83, 0.6);
+}
+
+.sell-btn {
+  background: linear-gradient(45deg, #ff9100, #ff6f00);
+  color: white;
+  box-shadow: 0 4px 16px rgba(255, 145, 0, 0.4);
+}
+
+.sell-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 145, 0, 0.6);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+/* Contratos tabla */
+.stock-header table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #23272f;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px #00c85340;
+}
+
+.stock-header th {
+  background: linear-gradient(90deg, #00c853 60%, #009624 100%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.stock-header td {
+  color: #e0e0e0;
+  border-bottom: 1px solid #23272f;
+  padding: 0.7rem;
+}
+
+.stock-header tr:hover td {
+  background: #181c24;
+  color: #ff9100;
+}
+
+/* Sección de Historial de Órdenes para Comisionistas */
+.orders-section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.orders-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 145, 0, 0.3);
+}
+
+.orders-section .section-header h2 {
+  color: #ff9100;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(255, 145, 0, 0.3);
+}
+
+.orders-count {
+  background: linear-gradient(45deg, #ff9100, #ff6f00);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(255, 145, 0, 0.4);
+}
+
+.orders-container {
+  flex: 1;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.order-card {
+  background: linear-gradient(135deg, #181c24 60%, #23272f 100%);
+  border-radius: 12px;
+  padding: 1.2rem;
+  border: 1px solid rgba(255, 145, 0, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 145, 0, 0.1);
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 145, 0, 0.2);
+  border-color: rgba(255, 145, 0, 0.4);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.order-type {
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  text-align: center;
+  min-width: 80px;
+}
+
+.order-price {
+  color: #00c853;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.order-date {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.order-details {
+  margin-bottom: 1rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.detail-row .label {
+  color: #e0e0e0;
+  opacity: 0.8;
+}
+
+.detail-row .value {
+  color: #ff9100;
+  font-weight: bold;
+}
+
+.order-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.approve-btn, .deny-btn {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.approve-btn {
+  background: linear-gradient(45deg, #00c853, #009624);
+  color: white;
+  box-shadow: 0 3px 12px rgba(0, 200, 83, 0.3);
+}
+
+.approve-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 200, 83, 0.5);
+}
+
+.deny-btn {
+  background: linear-gradient(45deg, #f44336, #d32f2f);
+  color: white;
+  box-shadow: 0 3px 12px rgba(244, 67, 54, 0.3);
+}
+
+.deny-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(244, 67, 54, 0.5);
+}
+
+.no-orders {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #e0e0e0;
+}
+
+.no-orders-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.no-orders p {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Botones inline para aprobar/denegar órdenes */
+.order-actions-inline {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.approve-btn-inline, .deny-btn-inline {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.approve-btn-inline {
+  background: linear-gradient(45deg, #00c853, #009624);
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 200, 83, 0.3);
+}
+
+.approve-btn-inline:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 200, 83, 0.5);
+}
+
+.deny-btn-inline {
+  background: linear-gradient(45deg, #f44336, #d32f2f);
+  color: white;
+  box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
+}
+
+.deny-btn-inline:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(244, 67, 54, 0.5);
+}
+
+/* Estilos para órdenes pendientes */
+.pending-order {
+  border-left: 4px solid #ff9800 !important;
+  background: linear-gradient(135deg, #2d1b1b 60%, #3d2a2a 100%) !important;
+}
+
+.pending-order:hover {
+  border-left-color: #ffb74d !important;
+  box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3) !important;
+}
+
+/* Estilos para órdenes procesadas */
+.processed-order {
+  border-left: 4px solid #4caf50 !important;
+  background: linear-gradient(135deg, #1b2d1b 60%, #2a3d2a 100%) !important;
+}
+
+.processed-order:hover {
+  border-left-color: #81c784 !important;
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3) !important;
+}
+
+/* Estilos para estados */
+.status-pending {
+  color: #ff9800 !important;
+  font-weight: bold;
+  background: rgba(255, 152, 0, 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.status-approved {
+  color: #4caf50 !important;
+  font-weight: bold;
+  background: rgba(76, 175, 80, 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.status-denied {
+  color: #f44336 !important;
+  font-weight: bold;
+  background: rgba(244, 67, 54, 0.1);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* Scroll personalizado para símbolos */
+.stock-table-container {
+  scrollbar-width: thin;
+  scrollbar-color: #00c853 #181c24;
+}
+
+.stock-table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.stock-table-container::-webkit-scrollbar-track {
+  background: #181c24;
+  border-radius: 4px;
+}
+
+.stock-table-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #00c853, #009624);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 200, 83, 0.3);
+}
+
+.stock-table-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #009624, #00c853);
+}
+
+/* Scroll oculto en otras tablas */
+.orders-table,
+.stock-table {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.orders-table::-webkit-scrollbar,
+.stock-table::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .parent {
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+  }
+  
+  .left-column {
+    flex: none;
+    height: 400px;
+    flex-direction: row;
+    max-width: none;
+  }
+  
+  .center-column {
+    flex: none;
+    height: 300px;
+    min-width: auto;
+  }
+  
+  .right-column {
+    flex: none;
+    height: 500px;
+  }
+  
+  .stock-card {
+    width: 95%;
+    padding: 1rem;
+  }
+  
+  #tradingview_12345 {
+    padding: 0.5rem;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 900px) {
+  .left-column {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .center-column {
+    height: 250px;
+  }
+  
+  .right-column {
+    height: 400px;
+  }
+  
+  .stock-card {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .parent {
+    flex-direction: column;
+    height: auto;
+    padding: 0.5rem;
+  }
+  
+  .left-column {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .center-column, .right-column {
+    flex: none;
+    height: 300px;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    padding: 0.5rem;
+  }
+  
+  .stock-card {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  #tradingview_12345 {
+    padding: 0.2rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

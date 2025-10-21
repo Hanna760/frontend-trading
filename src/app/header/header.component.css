@@ -1,0 +1,186 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2.5rem;
+  background: linear-gradient(90deg, #101820 60%, #00c853 100%);
+  color: #fff;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  box-shadow: 0 2px 12px 0 #00c85340;
+  border-bottom: 2px solid #ff9100;
+  position: relative;
+  z-index: 10;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.country-flag {
+  width: 32px;
+  height: 22px;
+  margin-right: 10px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px #00c85340;
+  border: 1.5px solid #00c853;
+}
+
+.user-name {
+  font-weight: 700;
+  color: #00c853;
+  letter-spacing: 1px;
+  margin-right: 0.5rem;
+}
+
+.user-role {
+  background: linear-gradient(90deg, #23272f 60%, #ff9100 100%);
+  color: #ff9100;
+  font-weight: 600;
+  padding: 0.2rem 0.8rem;
+  border-radius: 6px;
+  margin-right: 0.5rem;
+  box-shadow: 0 2px 8px #ff910080;
+  letter-spacing: 1px;
+}
+
+.portfolaio-value,
+.portfolio-value {
+  background: #23272f;
+  color: #00c853;
+  font-weight: 600;
+  padding: 0.2rem 0.8rem;
+  border-radius: 6px;
+  margin-right: 0.5rem;
+  box-shadow: 0 2px 8px #00c85340;
+  letter-spacing: 1px;
+}
+
+.portfolio-value.positive {
+  color: #00c853;
+  box-shadow: 0 2px 8px #00c85340;
+}
+
+.portfolio-value.negative {
+  color: #ff4444;
+  box-shadow: 0 2px 8px #ff444440;
+}
+
+/* Estilos para las acciones individuales */
+.actions-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.actions-label {
+  background: #ff9100;
+  color: #23272f;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.action-item {
+  background: #23272f;
+  color: #00c853;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  box-shadow: 0 1px 4px #00c85340;
+  letter-spacing: 0.5px;
+}
+
+.action-item.positive {
+  color: #00c853;
+  box-shadow: 0 1px 4px #00c85340;
+}
+
+.action-item.negative {
+  color: #ff4444;
+  box-shadow: 0 1px 4px #ff444440;
+}
+
+.logout-btn {
+  background: linear-gradient(90deg, #00c853 60%, #ff9100 100%);
+  border: none;
+  padding: 0.6rem 1.4rem;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 12px 0 #00c85340;
+  transition: background 0.3s, box-shadow 0.3s;
+  margin-left: 1rem;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(90deg, #ff9100 60%, #00c853 100%);
+  box-shadow: 0 4px 16px #ff910080, 0 2px 8px #00c85380;
+  color: #23272f;
+}
+
+.refresh-btn {
+  background: linear-gradient(90deg, #23272f 60%, #00c853 100%);
+  border: none;
+  padding: 0.6rem 1rem;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 12px 0 #00c85340;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+  margin-left: 0.5rem;
+}
+
+.refresh-btn:hover {
+  background: linear-gradient(90deg, #00c853 60%, #ff9100 100%);
+  box-shadow: 0 4px 16px #00c85380, 0 2px 8px #ff910080;
+  transform: rotate(180deg);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1.2rem;
+  }
+  .user-info {
+    gap: 1rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .logout-btn {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    padding: 0.7rem 0.5rem;
+  }
+  .user-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .country-flag {
+    width: 26px;
+    height: 18px;
+  }
+}

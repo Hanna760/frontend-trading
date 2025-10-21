@@ -1,0 +1,53 @@
+<header class="app-header">
+  <div class="user-info">
+    <img *ngIf="userCountry" [src]="getFlagUrl(userCountry)" alt="Bandera" class="country-flag">
+    <span class="user-name">{{ userName }}</span>
+    <span class="user-role">{{ userRole }}</span>
+
+    <!-- Datos para Accionistas -->
+    @if(userRole == "Accionista"){
+      <span class="portfolio-value">Saldo: ${{saldoDisponible | number:'1.2-2'}}</span>
+      <span class="portfolio-value">Portafolio: ${{ portfolioUSD | number:'1.2-2' }}</span>
+      <span class="portfolio-value" [class.positive]="gananciaPerdidaTotal >= 0" [class.negative]="gananciaPerdidaTotal < 0">
+        {{gananciaPerdidaTotal >= 0 ? '+' : ''}}{{gananciaPerdidaTotal | number:'1.2-2'}} ({{porcentajeCambioTotal >= 0 ? '+' : ''}}{{porcentajeCambioTotal | number:'1.2-2'}}%)
+      </span>
+      <span class="portfolio-value">Órdenes: {{totalOrdenes}}</span>
+      <span class="portfolio-value" *ngIf="ordenesPendientes > 0">Pendientes: {{ordenesPendientes}}</span>
+      
+      <!-- Mostrar acciones individuales -->
+      @if(accionesUsuario && accionesUsuario.length > 0){
+        <div class="actions-summary">
+          <span class="actions-label">Acciones:</span>
+          @for(accion of accionesUsuario; track accion.accion_id){
+            <span class="action-item" [class.positive]="accion.ganancia_perdida >= 0" [class.negative]="accion.ganancia_perdida < 0">
+              {{accion.nombre_accion}}: {{accion.cantidad}} acciones a ${{accion.valor_actual | number:'1.2-2'}}
+              ({{accion.ganancia_perdida >= 0 ? '+' : ''}}{{accion.ganancia_perdida | number:'1.2-2'}})
+            </span>
+          }
+        </div>
+      }
+    }
+
+    <!-- Datos para Comisionistas -->
+    @if(userRole == "Comisionista"){
+      <span class="portfolio-value">Total Órdenes: {{totalOrdenes}}</span>
+      <span class="portfolio-value" *ngIf="ordenesPendientes > 0">Pendientes: {{ordenesPendientes}}</span>
+      <span class="portfolio-value">Comisiones: ${{comisionesGanadas | number:'1.2-2'}}</span>
+    }
+
+    <!-- Datos para Administradores -->
+    @if(userRole == "ADMIN"){
+      <span class="portfolio-value">Panel Administración</span>
+    }
+  </div>
+  
+  @if(isAdmin && !isAdminRoute){
+    <button class="logout-btn" (click)="admin()">Panel administracion</button>
+  }
+
+  @if(isAdminRoute){
+    <button class="logout-btn" (click)="andina()">Andina</button>
+  }
+
+  <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+</header>

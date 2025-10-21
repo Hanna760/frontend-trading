@@ -1,0 +1,87 @@
+<app-header></app-header>
+<div class="admin-container">
+  <h1>Panel de Administración</h1>
+
+  <!-- Formularios arriba -->
+
+  <div class="form-container">
+    <div class="card">
+      <h2>Crear Empresa</h2>
+      <form [formGroup]="empresaForm" (ngSubmit)="crearEmpresa()">
+        <input placeholder="Nombre" formControlName="nombre" />
+        <input placeholder="Descripción" formControlName="descripcion" />
+        <select formControlName="sector_economico_id">
+          <option *ngFor="let sector of sectores" [value]="sector.id">{{ sector.nombre }}</option>
+        </select>
+
+        <button type="submit">Crear</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tablas lado a lado -->
+
+  <div class="tables-container">
+    <!-- Lista de Empresas -->
+    <div class="card table-card">
+      <h2>Empresas</h2>
+      <div class="table-scroll">
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Sector</th>
+          <th>Creación</th>
+        </tr>
+        <tr *ngFor="let empresa of empresas">
+          <td>{{ empresa.id }}</td>
+          <td>{{ empresa.nombre }}</td>
+          <td>{{ empresa.descripcion }}</td>
+          <td>{{ empresa.sector_economico_id }}</td>
+          <td>{{ empresa.created_at }}</td>
+        </tr>
+      </table>
+      </div>
+    </div>
+
+
+    <!-- Lista de Usuarios -->
+    <div class="card table-card">
+      <h2>Usuarios</h2>
+      <div class="table-scroll">
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Dirección</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+        <tr *ngFor="let usuario of usuarios">
+          <td>{{ usuario.id }}</td>
+          <td>{{ usuario.username }}</td>
+          <td>{{ usuario.full_name }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.address }}</td>
+          <td>{{ usuario.rol }}</td>
+          <td>
+            <button (click)="editarUsuario(usuario)">Editar</button>
+          </td>
+        </tr>
+      </table>
+      </div>
+      <!-- Formulario Edición -->
+      <div *ngIf="selectedUser" class="edit-user">
+        <h3>Editar Usuario</h3>
+        <input [(ngModel)]="selectedUser.full_name" placeholder="Nombre completo" />
+        <input [(ngModel)]="selectedUser.address" placeholder="Dirección" />
+        <input [(ngModel)]="selectedUser.rol" type="number" placeholder="Rol" />
+        <input [(ngModel)]="money" type="number" placeholder="money" />
+        <button (click)="guardarUsuario()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

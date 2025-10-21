@@ -1,0 +1,101 @@
+<div class="landing-container">
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1>{{ title }}</h1>
+            <p class="subtitle">¡Descubre el poder de invertir con tecnología y seguridad!</p>
+            <div class="cta-buttons">
+                <a routerLink="/login" class="btn btn-primary">Accede a tu cuenta</a>
+                <a routerLink="/register" class="btn btn-secondary">Crea tu cuenta gratis</a>
+            </div>
+            <div style="margin-top:2.5rem;">
+                <span style="color:#ff9100; font-size:1.15rem; font-weight:600;">
+                    Plataforma líder en trading para América Latina
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <section class="features-section">
+        <h2>Explora las ventajas de Andina Trading</h2>
+        <div class="features-grid" style="display: flex; flex-direction: column; gap: 2.5rem; align-items: center;">
+            <div class="feature-card" *ngFor="let feature of features">
+                <div class="feature-icon" style="margin-bottom: 1.2rem;">{{ feature.icon }}</div>
+                <h3>{{ feature.title }}</h3>
+                <p>
+                    <!-- Descripciones extendidas y profesionales -->
+                    <ng-container [ngSwitch]="feature.title">
+                        <span *ngSwitchCase="'Mercados Globales'">
+                            Accede a los principales mercados financieros del mundo con una sola plataforma. 
+                            Opera acciones, divisas y futuros en tiempo real, con información actualizada y soporte internacional. 
+                            Nuestra tecnología te permite diversificar tu portafolio y aprovechar oportunidades globales sin límites.
+                        </span>
+                        <span *ngSwitchCase="'Análisis Técnico'">
+                            Utiliza herramientas avanzadas de análisis técnico para tomar decisiones informadas. 
+                            Gráficos interactivos, indicadores personalizados y alertas inteligentes te ayudarán a identificar tendencias y maximizar tus resultados. 
+                            Aprende y aplica estrategias profesionales con el respaldo de nuestra comunidad de expertos.
+                        </span>
+                        <span *ngSwitchCase="'Seguridad'">
+                            Protege tus datos y transacciones con los más altos estándares de seguridad. 
+                            Contamos con cifrado de extremo a extremo, autenticación multifactor y monitoreo constante para garantizar la integridad de tus inversiones. 
+                            Confía en una plataforma regulada y comprometida con tu tranquilidad.
+                        </span>
+                        <span *ngSwitchDefault>
+                            {{ feature.description }}
+                        </span>
+                    </ng-container>
+                </p>
+                <ul style="list-style:none; padding:0; margin-top:1.5rem;">
+                    <li style="color:#00c853; font-size:1.7rem; text-align:center;">
+                        <i class="fa fa-check-circle" style="color:#ff9100;"></i>
+                    </li>
+                    <li style="color:#00c853; font-size:0.95rem; text-align:center; margin-bottom:1rem;">
+                        Acceso instantáneo y seguro
+                    </li>
+                    <li style="color:#00c853; font-size:1.7rem; text-align:center;">
+                        <i class="fa fa-check-circle" style="color:#ff9100;"></i>
+                    </li>
+                    <li style="color:#00c853; font-size:0.95rem; text-align:center; margin-bottom:1rem;">
+                        Herramientas inteligentes para tu crecimiento
+                    </li>
+                    <li style="color:#00c853; font-size:1.7rem; text-align:center;">
+                        <i class="fa fa-check-circle" style="color:#ff9100;"></i>
+                    </li>
+                    <li style="color:#00c853; font-size:0.95rem; text-align:center;">
+                        Comunidad activa de traders
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:2rem;">
+            <span style="color:#ff9100; font-size:1.1rem; font-weight:600;">
+                ¡Descubre una nueva forma de invertir, más ágil y conectada!
+            </span>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="about-content">
+            <h2>¡Invierte, aprende y crece!</h2>
+            <p>
+                En Andina Trading conectamos a inversores y empresas con los mercados globales, 
+                brindando soporte, análisis y seguridad. Únete a nuestra comunidad y lleva tus inversiones al siguiente nivel.
+                Nuestro equipo te acompaña en cada paso, ofreciéndote recursos educativos, atención personalizada y acceso a eventos exclusivos.
+                Sé parte de la revolución financiera en Latinoamérica y transforma tu futuro con nosotros.
+            </p>
+            <div style="margin-top:1.2rem;">
+                <span style="color:#ff9100; font-weight:600;">
+                    Somos LATAM, somos futuro. ¡Tu éxito comienza aquí!
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>
+                &copy; 2025 ANDINA TRADING. Plataforma de trading profesional para América Latina.<br>
+                <span style="color:#00c853;">Síguenos en redes sociales y mantente informado.</span>
+            </p>
+        </div>
+    </footer>
+</div>
