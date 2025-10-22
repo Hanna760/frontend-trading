@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ConfigService } from './config.service';
 
 export interface PortfolioAction {
   accion_id: number;
@@ -26,9 +27,9 @@ export interface PortfolioData {
   providedIn: 'root'
 })
 export class PortfolioService {
-  private readonly baseUrl = 'http://localhost:8000';
+  private readonly baseUrl = this.configService.apiUrl;
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient, private readonly configService: ConfigService) { }
 
   getPortfolio(usuarioId: number): Observable<PortfolioData> {
     return this.http.get<PortfolioData>(`${this.baseUrl}/portfolio/portfolio`, {

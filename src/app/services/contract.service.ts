@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {map, Observable, throwError} from "rxjs";
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContractService {
 
-  constructor(private http: HttpClient , private router : Router) { }
+  constructor(private readonly http: HttpClient , private readonly router : Router, private readonly configService: ConfigService) { }
 
 
   createContract(contract :any): Observable<string[]> {
@@ -23,7 +24,7 @@ export class ContractService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<any>('http://localhost:8000/contracts/', contract, { headers });
+    return this.http.post<any>(`${this.configService.apiUrl}/contracts/`, contract, { headers });
 
   }
 
@@ -39,7 +40,7 @@ export class ContractService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<any[]>('http://localhost:8000/contracts/', { headers }).pipe(
+    return this.http.get<any[]>(`${this.configService.apiUrl}/contracts/`, { headers }).pipe(
       map(actions => actions.filter(action => action.inversionista_id === id))
     );
   }

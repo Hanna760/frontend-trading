@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {catchError, map, Observable, throwError} from "rxjs";
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompaniesService {
 
-  constructor(private http: HttpClient , private router : Router) { }
+  constructor(private readonly http: HttpClient , private readonly router : Router, private readonly configService: ConfigService) { }
 
   getUsers(): Observable<any> {
     const token = localStorage.getItem('access_token');
@@ -22,7 +23,7 @@ export class CompaniesService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get('http://localhost:8000/companies', { headers });
+    return this.http.get(`${this.configService.apiUrl}/companies`, { headers });
   }
 
   getCompanyNames(): Observable<string[]> {
@@ -37,7 +38,7 @@ export class CompaniesService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<any[]>('http://localhost:8000/companies', { headers }).pipe(
+    return this.http.get<any[]>(`${this.configService.apiUrl}/companies`, { headers }).pipe(
       map(companies => companies.map(company => company.nombre))
     );
   }
@@ -54,7 +55,7 @@ export class CompaniesService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<any[]>('http://localhost:8000/companies', { headers }).pipe(
+    return this.http.get<any[]>(`${this.configService.apiUrl}/companies`, { headers }).pipe(
       map((companies) => {
         const company = companies.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
         return company ? company.id : null;
@@ -78,7 +79,7 @@ export class CompaniesService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<any[]>('http://localhost:8000/companies', { headers }).pipe(
+    return this.http.get<any[]>(`${this.configService.apiUrl}/companies`, { headers }).pipe(
       map(companies => companies.map(company => company))
     );
   }
@@ -95,7 +96,7 @@ export class CompaniesService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<any>('http://localhost:8000/companies', company, { headers });
+    return this.http.post<any>(`${this.configService.apiUrl}/companies`, company, { headers });
 
   }
 

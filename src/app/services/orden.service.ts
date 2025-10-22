@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import {map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdenService {
-  private readonly baseUrl = 'http://localhost:8000';
+  private readonly baseUrl = this.configService.apiUrl;
 
-  constructor(private readonly http: HttpClient , private readonly router : Router) { }
+  constructor(private readonly http: HttpClient , private readonly router : Router, private readonly configService: ConfigService) { }
 
   createOrder(order :any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/order/`, order);

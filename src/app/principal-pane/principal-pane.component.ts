@@ -265,10 +265,10 @@ export class PrincipalPaneComponent implements OnInit, AfterViewInit, OnDestroy 
   contratos: any[] = [];
   selectedAction: any = null;
   searchQuery: string = ''; // Para almacenar el texto de búsqueda
-  private sp500symbols: any[] = []
   widget: any; // Widget de TradingView // Referencia al widget de TradingView
   private isBrowser = false;
   filteredSymbols: string[] = [];
+  availableSymbols: string[] = []; // Lista de símbolos disponibles para búsqueda
   public symbol: string = 'AAPL'; // Variable que almacena el símbolo seleccionado
   public  stockPrice : number =125.5;
   actions :any = []
@@ -293,6 +293,10 @@ export class PrincipalPaneComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit(): void {
+    // Inicializar la lista de símbolos disponibles desde symbolPrices
+    this.availableSymbols = Object.keys(this.symbolPrices);
+    this.filteredSymbols = [...this.availableSymbols]; // Inicializar con todos los símbolos
+
     // Suscribirse a los cambios del estado de autenticación
     this.authSubscription = this.authStateService.authState$.subscribe((authState: AuthState) => {
       this.updateUserRole(authState);
@@ -317,7 +321,7 @@ export class PrincipalPaneComponent implements OnInit, AfterViewInit, OnDestroy 
       // Cargar datos iniciales después de asignar el rol
       setTimeout(() => {
         this.getAllActions();
-        this.getAllCompanies();
+        // Removido getAllCompanies() para usar solo los símbolos de symbolPrices
         this.getAllContracts();
       }, 200); // Aumentado el delay para asegurar que todo esté listo
     } else {
@@ -422,9 +426,13 @@ export class PrincipalPaneComponent implements OnInit, AfterViewInit, OnDestroy 
 
   // Método para filtrar los símbolos basado en el término de búsqueda
   filterSymbols(): void {
-    this.filteredSymbols = this.sp500symbols.filter(symbol =>
-      symbol.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+    if (!this.searchQuery.trim()) {
+      this.filteredSymbols = [...this.availableSymbols];
+    } else {
+      this.filteredSymbols = this.availableSymbols.filter(symbol =>
+        symbol.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
   }
 
   // Métodos para controlar el colapso de secciones
@@ -601,7 +609,7 @@ export class PrincipalPaneComponent implements OnInit, AfterViewInit, OnDestroy 
   public forceLoadData(): void {
     if (this.rol !== 0) {
       this.getAllActions();
-      this.getAllCompanies();
+      // Removido getAllCompanies() para usar solo los símbolos de symbolPrices
       this.getAllContracts();
     }
   }
@@ -694,17 +702,6 @@ export class PrincipalPaneComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  private getAllCompanies() {
-    this.companyService.getCompanyNames().subscribe({
-      next: (names) => {
-        this.sp500symbols = names;
-        this.filteredSymbols = [...names];  // Copiar los datos a filteredSymbols
-      },
-      error: (err) => {
-        console.error('Error al obtener empresas:', err.message);
-      }
-    });
-  }
 
 
 

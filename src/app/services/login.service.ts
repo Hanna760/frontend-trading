@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {Observable, throwError} from "rxjs";
 import { AuthStateService } from './auth-state.service';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,10 @@ import { AuthStateService } from './auth-state.service';
 export class LoginService {
 
   constructor(
-    private http: HttpClient, 
-    private router: Router,
-    private authStateService: AuthStateService
+    private readonly http: HttpClient, 
+    private readonly router: Router,
+    private readonly authStateService: AuthStateService,
+    private readonly configService: ConfigService
   ) { }
 
 
@@ -26,7 +28,7 @@ export class LoginService {
       'Content-Type': 'application/x-www-form-urlencoded',
     });
 
-    this.http.post('http://localhost:8000/users/token', body.toString(), { headers })
+    this.http.post(`${this.configService.apiUrl}/users/token`, body.toString(), { headers })
       .subscribe({
         next: (res: any) => {
           localStorage.setItem('access_token', res.access_token);
@@ -51,11 +53,11 @@ export class LoginService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get('http://localhost:8000/users/', { headers });
+    return this.http.get(`${this.configService.apiUrl}/users/`, { headers });
   }
 
   createUser(user : any){
-      return this.http.post('http://localhost:8000/users', user);
+      return this.http.post(`${this.configService.apiUrl}/users`, user);
   }
 
 

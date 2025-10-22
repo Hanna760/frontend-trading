@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ConfigService } from './config.service';
 
 export interface UserData {
   id: number;
@@ -24,9 +25,9 @@ export interface UserData {
   providedIn: 'root'
 })
 export class UserDataService {
-  private readonly baseUrl = 'http://localhost:8000';
+  private readonly baseUrl = this.configService.apiUrl;
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient, private readonly configService: ConfigService) { }
 
   /**
    * Obtiene todos los datos del usuario incluyendo portafolio y acciones

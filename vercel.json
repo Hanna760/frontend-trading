@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/frontend-andinatrading",
+  "installCommand": "npm install",
+  "framework": "angular",
+  "env": {
+    "API_URL": "https://tu-backend-url.com"
+  }
+}
